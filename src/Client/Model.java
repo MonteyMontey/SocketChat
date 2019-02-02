@@ -6,7 +6,7 @@ public class Model extends Observable {
     private String chat = "";
 
     void appendMessage(String message){
-        chat = chat+"\n"+"Dominik: "+message;
+        chat = chat+"Dominik: "+message+"\n";
         setChanged();
         notifyObservers(chat);
     }

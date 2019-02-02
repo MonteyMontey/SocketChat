@@ -10,9 +10,11 @@ public class View implements Observer {
     private Controller controller;
 
     private JTextArea chat;
+    private JTextField messageInput;
 
-    public View(Controller controller){
+    public View(Controller controller, Model model){
         this.controller = controller;
+        model.addObserver(this);
     }
 
     public void update(Observable observable, Object arg){
@@ -26,7 +28,7 @@ public class View implements Observer {
         viewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         viewFrame.setResizable(false);
 
-        JTextField messageInput = new JTextField();
+        messageInput = new JTextField();
         messageInput.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
         messageInput.setPreferredSize(new Dimension(680,50));
@@ -53,5 +55,9 @@ public class View implements Observer {
         viewFrame.setSize(new Dimension(800,1000));
         viewFrame.setLocationRelativeTo(null);
         viewFrame.setVisible(true);
+    }
+
+    public void clearMessageInput(){
+        messageInput.setText("");
     }
 }
