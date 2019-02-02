@@ -9,6 +9,9 @@ public class View implements Observer {
 
     private Controller controller;
 
+    private JFrame loginFrame;
+    private JFrame chatFrame;
+
     private JTextArea chat;
     private JTextField messageInput;
 
@@ -23,10 +26,32 @@ public class View implements Observer {
     }
 
 
-    public void createView(){
-        JFrame viewFrame = new JFrame("View");
-        viewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        viewFrame.setResizable(false);
+    public void createLogin(){
+        loginFrame = new JFrame("Login");
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setResizable(false);
+
+        JTextField usernameInput = new JTextField();
+        usernameInput.setPreferredSize(new Dimension(200,50));
+        usernameInput.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        JButton loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(100, 50));
+        loginButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        loginButton.addActionListener(e -> controller.login(usernameInput.getText()));
+        JPanel loginPanel = new JPanel(new GridBagLayout());
+        loginPanel.add(usernameInput);
+        loginPanel.add(loginButton);
+
+        loginFrame.getContentPane().add(loginPanel);
+        loginFrame.setSize(new Dimension(400,200));
+        loginFrame.setLocationRelativeTo(null);
+        loginFrame.setVisible(true);
+    }
+
+    public void createChat(){
+        chatFrame = new JFrame("Chat");
+        chatFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        chatFrame.setResizable(false);
 
         messageInput = new JTextField();
         messageInput.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
@@ -49,15 +74,21 @@ public class View implements Observer {
 
         chatPanel.add(jscrollPane, BorderLayout.CENTER);
 
-        viewFrame.getContentPane().add(BorderLayout.SOUTH, userPanel);
-        viewFrame.getContentPane().add(BorderLayout.CENTER, chatPanel);
+        chatFrame.getContentPane().add(BorderLayout.SOUTH, userPanel);
+        chatFrame.getContentPane().add(BorderLayout.CENTER, chatPanel);
 
-        viewFrame.setSize(new Dimension(800,1000));
-        viewFrame.setLocationRelativeTo(null);
-        viewFrame.setVisible(true);
+        chatFrame.setSize(new Dimension(800,1000));
+        chatFrame.setLocationRelativeTo(null);
+        chatFrame.setVisible(true);
     }
 
     public void clearMessageInput(){
         messageInput.setText("");
+    }
+
+    public void switchToChat(){
+        loginFrame.setVisible(false);
+        // loginFrame = null;
+        createChat();
     }
 }
