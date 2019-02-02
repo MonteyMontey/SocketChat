@@ -7,11 +7,21 @@ import java.util.Observer;
 
 public class View implements Observer {
 
-    public void update(Observable observable, Object object){
+    private Controller controller;
 
+    private JTextArea chat;
+
+    public View(Controller controller){
+        this.controller = controller;
     }
 
-    public static void createView(){
+    public void update(Observable observable, Object arg){
+        chat.setText(arg.toString());
+        //chat.update(chat.getGraphics());
+    }
+
+
+    public void createView(){
         JFrame viewFrame = new JFrame("View");
         viewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         viewFrame.setResizable(false);
@@ -23,16 +33,17 @@ public class View implements Observer {
         JButton sendButton = new JButton("Send");
         sendButton.setPreferredSize(new Dimension(100,50));
         sendButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        sendButton.addActionListener(e -> controller.sendMessage(messageInput.getText()));
 
         JPanel userPanel = new JPanel(new FlowLayout());
         userPanel.add(messageInput);
         userPanel.add(sendButton);
 
         JPanel chatPanel = new JPanel(new BorderLayout());
-        JTextArea jtextArea = new JTextArea();
-        jtextArea.setEditable(false);
-        jtextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
-        JScrollPane jscrollPane = new JScrollPane(jtextArea);
+        chat = new JTextArea();
+        chat.setEditable(false);
+        chat.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        JScrollPane jscrollPane = new JScrollPane(chat);
 
         chatPanel.add(jscrollPane, BorderLayout.CENTER);
 
