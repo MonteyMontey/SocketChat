@@ -11,7 +11,6 @@ public class Controller {
     }
 
     void sendMessage(String message){
-        // send message to server here
         model.appendMessage(message);
         view.clearMessageInput();
     }
