@@ -6,8 +6,10 @@ public class Model extends Observable {
     private String chat = "";
 
     void appendMessage(String message){
-        chat = chat+"Dominik: "+message+"\n";
-        setChanged();
-        notifyObservers(chat);
+        if (!message.equals("")){
+            chat = chat+"Dominik: "+message+"\n";
+            setChanged();
+            notifyObservers(chat);
+        }
     }
 }
