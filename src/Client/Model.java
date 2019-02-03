@@ -1,9 +1,6 @@
 package Client;
 
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
@@ -11,25 +8,16 @@ import java.util.Observable;
 public class Model extends Observable {
     private String chat = "";
     private String username = "";
+    private BufferedReader reader;
+    private PrintWriter writer;
 
-    void appendMessage(String message){
-        if (!message.equals("")){
-            chat = chat+username+": "+message+"\n";
-            setChanged();
-            notifyObservers(chat);
-        }
-
-        sendMessageToServer(message);
-    }
-
-    private void sendMessageToServer(String message){
-        // try(Socket socket..){} is closing socket after scope
-        try (Socket socket = new Socket("localhost", 1234)){
-
+    public Model(){
+        try {
+            Socket socket = new Socket("localhost", 1234);
+            InputStream input = socket.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(input));
             OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-
-            writer.println(message);
+            writer = new PrintWriter(output, true);
         }
         catch (UnknownHostException e) {
             System.out.println("Server not found: " + e.getMessage());
@@ -38,9 +26,35 @@ public class Model extends Observable {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
+
+        new ClientListeningThread(reader, this).start();
     }
 
-    public void setUsername(String username){
+    void loginUser(String username){
+        // define json structure
+    }
+
+    void appendMessageToLocalChat(String message){
+        if (!message.equals("")){
+            chat = chat+username+": "+message+"\n";
+            setChanged();
+            notifyObservers(chat);
+        }
+    }
+
+    void sendMessage(String message){
+        if (!message.equals("")){
+            writer.println(message);
+            appendMessageToLocalChat(message);
+        }
+    }
+
+    void serverMessageReceived(String message){
+
+    }
+
+
+    void setUsername(String username){
         this.username = username;
     }
 }

@@ -11,13 +11,15 @@ public class Controller {
     }
 
     void sendMessage(String message){
-        model.appendMessage(message);
+        model.sendMessage(message);
         view.clearMessageInput();
     }
 
     void login(String username){
         if (!username.equals("")){
             model.setUsername(username);
+            model.loginUser(username);
+            // check if name already used
             view.switchToChat();
         }
     }
