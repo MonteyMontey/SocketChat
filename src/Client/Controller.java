@@ -17,9 +17,9 @@ public class Controller {
 
     void login(String username){
         if (!username.equals("")){
-            model.setUsername(username);
             model.loginUser(username);
-            // check if name already used
+
+            model.setUsername(username);
             view.switchToChat();
         }
     }

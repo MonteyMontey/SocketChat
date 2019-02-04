@@ -1,5 +1,7 @@
 package Client;
 
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -27,14 +29,38 @@ public class Model extends Observable {
             e.printStackTrace();
         }
 
-        new ClientListeningThread(reader, this).start();
+        // new ClientListeningThread(reader, this).start();
     }
 
     void loginUser(String username){
-        // define json structure
+        String loginJson = createLoginJson(username);
+        writer.println(loginJson);
+
+        try {
+            String response = reader.readLine();
+            // check answer
+        }
+        catch (IOException e){
+            System.out.println("Server exception: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    void appendMessageToLocalChat(String message){
+    void receivedServerMessage(String message){
+        JSONObject serverJson = new JSONObject(message);
+        switch (serverJson.getString("type")){
+            case "loginResponse":
+                if (serverJson.getBoolean("loginSuccessful")){
+                    // continue
+                }
+            case "chatUpdate":
+                break;
+        }
+    }
+
+
+
+    private void appendMessageToLocalChat(String message){
         if (!message.equals("")){
             chat = chat+username+": "+message+"\n";
             setChanged();
@@ -49,12 +75,18 @@ public class Model extends Observable {
         }
     }
 
-    void serverMessageReceived(String message){
-
-    }
-
 
     void setUsername(String username){
         this.username = username;
+    }
+
+
+
+    private String createLoginJson(String username){
+        JSONObject loginJson = new JSONObject();
+        // JSONObject automatically escapes weird user names that contain e.g. quotation marks
+        loginJson.put("type", "login");
+        loginJson.put("username", username);
+        return loginJson.toString();
     }
 }

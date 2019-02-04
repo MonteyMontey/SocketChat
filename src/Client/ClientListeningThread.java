@@ -18,7 +18,7 @@ public class ClientListeningThread extends Thread {
             while (true){
                 message = socketListener.readLine();
                 if (message != null){
-                    model.serverMessageReceived(message);
+                    model.receivedServerMessage(message);
                 }
             }
         }
