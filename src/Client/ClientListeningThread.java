@@ -13,19 +13,19 @@ public class ClientListeningThread extends Thread {
     }
 
     public void run(){
-        try {
-            String message;
-            while (true){
-                message = socketListener.readLine();
-                if (message != null){
-                    model.receivedServerMessage(message);
-                }
-            }
-        }
-        catch (IOException e){
-            System.out.println("Server exception: " + e.getMessage());
-            e.printStackTrace();
-        }
+//        try {
+//            String message;
+//            while (true){
+//                message = socketListener.readLine();
+//                if (message != null){
+//                    model.receivedServerMessage(message);
+//                }
+//            }
+//        }
+//        catch (IOException e){
+//            System.out.println("Server exception: " + e.getMessage());
+//            e.printStackTrace();
+//        }
 
     }
 }

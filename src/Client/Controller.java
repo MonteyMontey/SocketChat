@@ -11,16 +11,17 @@ public class Controller {
     }
 
     void sendMessage(String message){
-        model.sendMessage(message);
-        view.clearMessageInput();
+//        model.sendMessage(message);
+//        view.clearMessageInput();
     }
 
     void login(String username){
         if (!username.equals("")){
-            model.loginUser(username);
-
-            model.setUsername(username);
-            view.switchToChat();
+            // maybe have this as a callback later somehow
+            if (model.registerUser(username)){
+                model.setUsername(username);
+                view.switchToChat();
+            }
         }
     }
 }

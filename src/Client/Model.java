@@ -32,48 +32,57 @@ public class Model extends Observable {
         // new ClientListeningThread(reader, this).start();
     }
 
-    void loginUser(String username){
+    boolean registerUser(String username){
         String loginJson = createLoginJson(username);
         writer.println(loginJson);
 
         try {
-            String response = reader.readLine();
-            // check answer
+            String response;
+            do {
+                response = reader.readLine();
+            } while(response == null);
+
+            JSONObject responseJson = new JSONObject(response);
+            System.out.println("true");
+            return responseJson.getBoolean("loginSuccessful");
         }
         catch (IOException e){
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("false");
+        return false;
     }
 
-    void receivedServerMessage(String message){
-        JSONObject serverJson = new JSONObject(message);
-        switch (serverJson.getString("type")){
-            case "loginResponse":
-                if (serverJson.getBoolean("loginSuccessful")){
-                    // continue
-                }
-            case "chatUpdate":
-                break;
-        }
-    }
+//    void receivedServerMessage(String message){
+//        JSONObject serverJson = new JSONObject(message);
+//        switch (serverJson.getString("type")){
+//            case "loginResponse":
+//                if (serverJson.getBoolean("loginSuccessful")){
+//                    // continue
+//                }
+//                break;
+//            case "chatUpdate":
+//                break;
+//        }
+//    }
 
 
 
-    private void appendMessageToLocalChat(String message){
-        if (!message.equals("")){
-            chat = chat+username+": "+message+"\n";
-            setChanged();
-            notifyObservers(chat);
-        }
-    }
+//    private void appendMessageToLocalChat(String message){
+//        if (!message.equals("")){
+//            chat = chat+username+": "+message+"\n";
+//            setChanged();
+//            notifyObservers(chat);
+//        }
+//    }
 
-    void sendMessage(String message){
-        if (!message.equals("")){
-            writer.println(message);
-            appendMessageToLocalChat(message);
-        }
-    }
+//    void sendMessage(String message){
+//        if (!message.equals("")){
+//            writer.println(message);
+//            appendMessageToLocalChat(message);
+//        }
+//    }
 
 
     void setUsername(String username){

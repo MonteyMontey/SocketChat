@@ -1,13 +1,18 @@
 package Server;
 
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 
 public class ServerThread extends Thread{
+
+    private Server server;
     private Socket clientSocketConnection;
 
-    public ServerThread(Socket clientSocketConnection){
+    public ServerThread(Socket clientSocketConnection, Server server){
         this.clientSocketConnection = clientSocketConnection;
+        this.server = server;
     }
 
     public void run(){
@@ -24,7 +29,16 @@ public class ServerThread extends Thread{
             while (true){
                 message = reader.readLine();
                 if (message != null){
-                    System.out.println(message);
+                    JSONObject clientJson = new JSONObject(message);
+
+                    switch (clientJson.getString("type")){
+                        case "login":
+                            // check if already there
+                            // send confirmation
+                            break;
+                        case "uploadMessage":
+                            break;
+                    }
                 }
             }
         }
@@ -32,5 +46,9 @@ public class ServerThread extends Thread{
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    boolean usernameAlreadyUsed(){
+
     }
 }

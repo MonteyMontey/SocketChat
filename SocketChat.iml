@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/json-20180813.jar!/" />
+          <root url="jar:///media/monteymontey/OS/Program Files (x86)/Java/json-20180813.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
