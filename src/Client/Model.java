@@ -43,14 +43,13 @@ public class Model extends Observable {
             } while(response == null);
 
             JSONObject responseJson = new JSONObject(response);
-            System.out.println("true");
+            System.out.println(responseJson.toString());
             return responseJson.getBoolean("loginSuccessful");
         }
         catch (IOException e){
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
-        System.out.println("false");
         return false;
     }
 

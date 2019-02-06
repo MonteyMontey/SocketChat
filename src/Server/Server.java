@@ -20,7 +20,7 @@ public class Server {
 
     private void startServer(int port){
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
             acceptClients();
         }
         catch (IOException e){
@@ -45,6 +45,15 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    public Map<String, Socket> getLoggedInClients() {
+        return loggedInClients;
+    }
+
+    public void setLoggedInClients(Map<String, Socket> loggedInClients) {
+        this.loggedInClients = loggedInClients;
+    }
+
 }
 
 

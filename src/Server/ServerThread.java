@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ServerThread extends Thread{
 
@@ -22,19 +23,25 @@ public class ServerThread extends Thread{
             InputStream input = clientSocketConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-            //OutputStream output = clientSocketConnection.getOutputStream();
-            //PrintWriter writer = new PrintWriter(output, true);
+            OutputStream output = clientSocketConnection.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
 
             String message;
             while (true){
                 message = reader.readLine();
                 if (message != null){
+                    System.out.println(message);
                     JSONObject clientJson = new JSONObject(message);
 
                     switch (clientJson.getString("type")){
                         case "login":
-                            // check if already there
-                            // send confirmation
+                            if (usernameAlreadyConnected(clientJson.getString("username"))) {
+                                writer.println(createLoginResponse(false));
+                            }
+                            else{
+                                writer.println(createLoginResponse(true));
+
+                            }
                             break;
                         case "uploadMessage":
                             break;
@@ -42,13 +49,23 @@ public class ServerThread extends Thread{
                 }
             }
         }
+        catch (SocketException e){
+            System.out.println("client disconnected");
+        }
         catch (IOException e){
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    boolean usernameAlreadyUsed(){
+    boolean usernameAlreadyConnected(String username){
+        return server.getLoggedInClients().get(username) != null;
+    }
 
+    private String createLoginResponse(boolean successful){
+        JSONObject loginJson = new JSONObject();
+        loginJson.put("type", "loginResponse");
+        loginJson.put("loginSuccessful", successful);
+        return loginJson.toString();
     }
 }
