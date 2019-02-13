@@ -10,6 +10,7 @@ public class ServerThread extends Thread {
 
     private Server server;
     private Socket clientSocketConnection;
+    private String clientUsername;
 
     public ServerThread(Socket clientSocketConnection, Server server) {
         this.clientSocketConnection = clientSocketConnection;
@@ -38,6 +39,7 @@ public class ServerThread extends Thread {
                             if (server.usernameAlreadyConnected(clientJson.getString("username"))) {
                                 writer.println(server.createLoginResponse(false));
                             } else {
+                                clientUsername = clientJson.getString("username");
                                 server.storeClientConnection(clientSocketConnection, clientJson.getString("username"));
                                 writer.println(server.createLoginResponse(true));
                             }
@@ -50,7 +52,8 @@ public class ServerThread extends Thread {
                 }
             }
         } catch (SocketException e) {
-            System.out.println("client disconnected");
+            server.clientDisconnected(clientUsername);
+            System.out.println(clientUsername+ "client disconnected");
         } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();

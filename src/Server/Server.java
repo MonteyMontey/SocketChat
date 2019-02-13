@@ -70,6 +70,10 @@ public class Server {
         loggedInClients.put(username, clientSocketConnection);
     }
 
+    void clientDisconnected(String username){
+        loggedInClients.remove(username);
+    }
+
     String createLoginResponse(boolean successful) {
         JSONObject loginJson = new JSONObject();
         loginJson.put("type", "loginResponse");
