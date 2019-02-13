@@ -1,10 +1,10 @@
 package Client;
 
-public class Controller {
+class Controller {
     private Model model;
     private View view;
 
-    public Controller(Model model) {
+    Controller(Model model) {
         this.model = model;
         view = new View(this, model);
         view.createLogin();

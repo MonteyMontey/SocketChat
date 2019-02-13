@@ -49,7 +49,7 @@ public class Model extends Observable {
     }
 
 
-    public void startListeningForMessages() {
+    void startListeningForMessages() {
         new ClientListeningThread(reader, this).start();
         System.out.println("<<< Client now listening for messages >>>");
     }

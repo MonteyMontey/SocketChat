@@ -12,7 +12,7 @@ public class ServerThread extends Thread {
     private Socket clientSocketConnection;
     private String clientUsername;
 
-    public ServerThread(Socket clientSocketConnection, Server server) {
+    ServerThread(Socket clientSocketConnection, Server server) {
         this.clientSocketConnection = clientSocketConnection;
         this.server = server;
     }
@@ -36,13 +36,16 @@ public class ServerThread extends Thread {
 
                     switch (clientJson.getString("type")) {
                         case "login":
+                            server.lock.lock(); /*blocks all other threads that want to execute lock.lock(), needed because
+                            two clients could login at the exact same time and both receive true for the same username*/
                             if (server.usernameAlreadyConnected(clientJson.getString("username"))) {
                                 writer.println(server.createLoginResponse(false));
                             } else {
-                                clientUsername = clientJson.getString("username");
-                                server.storeClientConnection(clientSocketConnection, clientJson.getString("username"));
+                                this.clientUsername = clientJson.getString("username");
+                                server.storeClientConnection(clientSocketConnection, clientUsername);
                                 writer.println(server.createLoginResponse(true));
                             }
+                            server.lock.unlock();
                             break;
                         case "uploadMessage":
                             String broadcastJson = server.createBroadcastJson(clientJson.getString("message"), clientJson.getString("sender"));
@@ -53,7 +56,7 @@ public class ServerThread extends Thread {
             }
         } catch (SocketException e) {
             server.clientDisconnected(clientUsername);
-            System.out.println(clientUsername+ "client disconnected");
+            System.out.println(clientUsername + "client disconnected");
         } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();

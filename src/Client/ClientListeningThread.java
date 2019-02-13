@@ -7,7 +7,7 @@ public class ClientListeningThread extends Thread {
     private BufferedReader socketListener;
     private Model model;
 
-    public ClientListeningThread(BufferedReader socketListener, Model model) {
+    ClientListeningThread(BufferedReader socketListener, Model model) {
         this.socketListener = socketListener;
         this.model = model;
     }

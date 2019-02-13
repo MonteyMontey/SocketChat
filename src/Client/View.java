@@ -15,7 +15,7 @@ public class View implements Observer {
     private JTextArea chat;
     private JTextField messageInput;
 
-    public View(Controller controller, Model model) {
+    View(Controller controller, Model model) {
         this.controller = controller;
         model.addObserver(this);
     }
@@ -25,7 +25,7 @@ public class View implements Observer {
     }
 
 
-    public void createLogin() {
+    void createLogin() {
         loginFrame = new JFrame("Login");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setResizable(false);
@@ -47,7 +47,7 @@ public class View implements Observer {
         loginFrame.setVisible(true);
     }
 
-    public void createChat() {
+    private void createChat() {
         chatFrame = new JFrame("Chat");
         chatFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         chatFrame.setResizable(false);
@@ -81,24 +81,24 @@ public class View implements Observer {
         chatFrame.setVisible(true);
     }
 
-    public void clearMessageInput() {
+    void clearMessageInput() {
         messageInput.setText("");
     }
 
-    public void switchToChat() {
+    void switchToChat() {
         loginFrame.setVisible(false);
         loginFrame = null;
         createChat();
     }
 
-    public void alertUsernameAlreadyConnected() {
+    void alertUsernameAlreadyConnected() {
         JOptionPane.showMessageDialog(loginFrame,
                 "Username already chosen by another user.",
                 "Invalid username",
                 JOptionPane.ERROR_MESSAGE);
     }
 
-    public void alertUsernameCannotBeEmpty() {
+    void alertUsernameCannotBeEmpty() {
         JOptionPane.showMessageDialog(loginFrame,
                 "Username must have at lest one character.",
                 "Invalid username",

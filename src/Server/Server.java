@@ -9,16 +9,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /* https://www.codejava.net/java-se/networking/java-socket-server-examples-tcp-ip */
 
-public class Server {
+class Server {
 
     private Map<String, Socket> loggedInClients;
     private ServerSocket serverSocket;
+    Lock lock;
 
-    public Server(int port) {
+    Server(int port) {
         loggedInClients = new HashMap<String, Socket>();
+        this.lock = new ReentrantLock();
         startServer(port);
     }
 
@@ -70,7 +74,7 @@ public class Server {
         loggedInClients.put(username, clientSocketConnection);
     }
 
-    void clientDisconnected(String username){
+    void clientDisconnected(String username) {
         loggedInClients.remove(username);
     }
 
@@ -89,7 +93,3 @@ public class Server {
         return broadcastJson.toString();
     }
 }
-
-
-/* what if two clients ask at the same time for validUsername and ig gets execute like: 1. validUsername? 2. validUsername?
-3. saveUsername 4. saveUsername because there are different threads for each client*/
