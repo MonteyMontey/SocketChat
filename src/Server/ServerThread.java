@@ -6,20 +6,20 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class ServerThread extends Thread{
+public class ServerThread extends Thread {
 
     private Server server;
     private Socket clientSocketConnection;
 
-    public ServerThread(Socket clientSocketConnection, Server server){
+    public ServerThread(Socket clientSocketConnection, Server server) {
         this.clientSocketConnection = clientSocketConnection;
         this.server = server;
     }
 
-    public void run(){
+    public void run() {
         try {
             /* Decorator Pattern, InputStream only reads data at a low level, in byte arrays. Which is why you need
-            * to wrap it with Buffered Reader to add functionality to read it as a String*/
+             * to wrap it with Buffered Reader to add functionality to read it as a String*/
             InputStream input = clientSocketConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
@@ -27,45 +27,33 @@ public class ServerThread extends Thread{
             PrintWriter writer = new PrintWriter(output, true);
 
             String message;
-            while (true){
+            while (true) {
                 message = reader.readLine();
-                if (message != null){
+                if (message != null) {
                     System.out.println(message);
                     JSONObject clientJson = new JSONObject(message);
 
-                    switch (clientJson.getString("type")){
+                    switch (clientJson.getString("type")) {
                         case "login":
-                            if (usernameAlreadyConnected(clientJson.getString("username"))) {
-                                writer.println(createLoginResponse(false));
-                            }
-                            else{
-                                writer.println(createLoginResponse(true));
-
+                            if (server.usernameAlreadyConnected(clientJson.getString("username"))) {
+                                writer.println(server.createLoginResponse(false));
+                            } else {
+                                server.storeClientConnection(clientSocketConnection, clientJson.getString("username"));
+                                writer.println(server.createLoginResponse(true));
                             }
                             break;
                         case "uploadMessage":
+                            String broadcastJson = server.createBroadcastJson(clientJson.getString("message"), clientJson.getString("sender"));
+                            server.broadcastMessage(broadcastJson);
                             break;
                     }
                 }
             }
-        }
-        catch (SocketException e){
+        } catch (SocketException e) {
             System.out.println("client disconnected");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    boolean usernameAlreadyConnected(String username){
-        return server.getLoggedInClients().get(username) != null;
-    }
-
-    private String createLoginResponse(boolean successful){
-        JSONObject loginJson = new JSONObject();
-        loginJson.put("type", "loginResponse");
-        loginJson.put("loginSuccessful", successful);
-        return loginJson.toString();
     }
 }

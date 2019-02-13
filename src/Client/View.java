@@ -15,24 +15,23 @@ public class View implements Observer {
     private JTextArea chat;
     private JTextField messageInput;
 
-    public View(Controller controller, Model model){
+    public View(Controller controller, Model model) {
         this.controller = controller;
         model.addObserver(this);
     }
 
-    public void update(Observable observable, Object arg){
+    public void update(Observable observable, Object arg) {
         chat.setText(arg.toString());
-        //chat.update(chat.getGraphics());
     }
 
 
-    public void createLogin(){
+    public void createLogin() {
         loginFrame = new JFrame("Login");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setResizable(false);
 
         JTextField usernameInput = new JTextField();
-        usernameInput.setPreferredSize(new Dimension(200,50));
+        usernameInput.setPreferredSize(new Dimension(200, 50));
         usernameInput.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
         JButton loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(100, 50));
@@ -43,12 +42,12 @@ public class View implements Observer {
         loginPanel.add(loginButton);
 
         loginFrame.getContentPane().add(loginPanel);
-        loginFrame.setSize(new Dimension(400,200));
+        loginFrame.setSize(new Dimension(400, 200));
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
     }
 
-    public void createChat(){
+    public void createChat() {
         chatFrame = new JFrame("Chat");
         chatFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         chatFrame.setResizable(false);
@@ -56,9 +55,9 @@ public class View implements Observer {
         messageInput = new JTextField();
         messageInput.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
-        messageInput.setPreferredSize(new Dimension(680,50));
+        messageInput.setPreferredSize(new Dimension(680, 50));
         JButton sendButton = new JButton("Send");
-        sendButton.setPreferredSize(new Dimension(100,50));
+        sendButton.setPreferredSize(new Dimension(100, 50));
         sendButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
         sendButton.addActionListener(e -> controller.sendMessage(messageInput.getText()));
 
@@ -77,18 +76,32 @@ public class View implements Observer {
         chatFrame.getContentPane().add(BorderLayout.SOUTH, userPanel);
         chatFrame.getContentPane().add(BorderLayout.CENTER, chatPanel);
 
-        chatFrame.setSize(new Dimension(800,1000));
+        chatFrame.setSize(new Dimension(800, 1000));
         chatFrame.setLocationRelativeTo(null);
         chatFrame.setVisible(true);
     }
 
-    public void clearMessageInput(){
+    public void clearMessageInput() {
         messageInput.setText("");
     }
 
-    public void switchToChat(){
+    public void switchToChat() {
         loginFrame.setVisible(false);
-        // loginFrame = null;
+        loginFrame = null;
         createChat();
+    }
+
+    public void alertUsernameAlreadyConnected() {
+        JOptionPane.showMessageDialog(loginFrame,
+                "Username already chosen by another user.",
+                "Invalid username",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void alertUsernameCannotBeEmpty() {
+        JOptionPane.showMessageDialog(loginFrame,
+                "Username must have at lest one character.",
+                "Invalid username",
+                JOptionPane.ERROR_MESSAGE);
     }
 }
