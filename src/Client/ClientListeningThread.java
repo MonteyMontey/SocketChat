@@ -1,7 +1,5 @@
 package Client;
 
-import org.json.JSONException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -23,7 +21,7 @@ public class ClientListeningThread extends Thread {
                     model.receivedServerMessage(message);
                 }
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }

@@ -1,7 +1,5 @@
 package Client;
 
-import org.json.JSONException;
-
 class Controller {
     private Model model;
     private View view;
@@ -12,12 +10,12 @@ class Controller {
         view.createLogin();
     }
 
-    void sendMessage(String message) throws JSONException {
+    void sendMessage(String message) {
         model.sendMessage(message);
         view.clearMessageInput();
     }
 
-    void login(String username) throws JSONException {
+    void login(String username) {
         if (username.equals("")) {
             view.alertUsernameCannotBeEmpty();
         } else {
