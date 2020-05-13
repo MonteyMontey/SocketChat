@@ -1,5 +1,6 @@
 package Server;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -78,14 +79,14 @@ class Server {
         loggedInClients.remove(username);
     }
 
-    String createLoginResponse(boolean successful) {
+    String createLoginResponse(boolean successful) throws JSONException {
         JSONObject loginJson = new JSONObject();
         loginJson.put("type", "loginResponse");
         loginJson.put("loginSuccessful", successful);
         return loginJson.toString();
     }
 
-    String createBroadcastJson(String message, String username) {
+    String createBroadcastJson(String message, String username) throws JSONException {
         JSONObject broadcastJson = new JSONObject();
         broadcastJson.put("type", "newMessage");
         broadcastJson.put("sender", username);

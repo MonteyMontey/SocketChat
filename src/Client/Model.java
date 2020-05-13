@@ -1,5 +1,6 @@
 package Client;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -7,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 
+@SuppressWarnings("ALL")
 public class Model extends Observable {
     private String chat = "";
     private String username = "";
@@ -28,7 +30,7 @@ public class Model extends Observable {
         }
     }
 
-    boolean registerUser(String username) {
+    boolean registerUser(String username) throws JSONException {
         String loginJson = createLoginJson(username);
         writer.println(loginJson);
 
@@ -41,7 +43,7 @@ public class Model extends Observable {
             JSONObject responseJson = new JSONObject(response);
             System.out.println(responseJson.toString());
             return responseJson.getBoolean("loginSuccessful");
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
@@ -54,7 +56,7 @@ public class Model extends Observable {
         System.out.println("<<< Client now listening for messages >>>");
     }
 
-    void receivedServerMessage(String message) {
+    void receivedServerMessage(String message) throws JSONException {
         JSONObject serverJson = new JSONObject(message);
         System.out.println(serverJson);
         if ("newMessage".equals(serverJson.getString("type"))) {
@@ -70,7 +72,7 @@ public class Model extends Observable {
         }
     }
 
-    void sendMessage(String message) {
+    void sendMessage(String message) throws JSONException {
         if (!message.equals("")) {
             writer.println(createSendMessageJson(message));
         }
@@ -81,7 +83,7 @@ public class Model extends Observable {
     }
 
 
-    private String createLoginJson(String username) {
+    private String createLoginJson(String username) throws JSONException {
         JSONObject loginJson = new JSONObject();
         // JSONObject automatically escapes weird user names that contain e.g. quotation marks
         loginJson.put("type", "login");
@@ -89,7 +91,7 @@ public class Model extends Observable {
         return loginJson.toString();
     }
 
-    private String createSendMessageJson(String message) {
+    private String createSendMessageJson(String message) throws JSONException {
         JSONObject sendMessageJson = new JSONObject();
         sendMessageJson.put("type", "uploadMessage");
         sendMessageJson.put("sender", this.username);

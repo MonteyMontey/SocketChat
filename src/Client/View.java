@@ -1,10 +1,13 @@
 package Client;
 
+import org.json.JSONException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+@SuppressWarnings("ALL")
 public class View implements Observer {
 
     private Controller controller;
@@ -36,7 +39,13 @@ public class View implements Observer {
         JButton loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(100, 50));
         loginButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-        loginButton.addActionListener(e -> controller.login(usernameInput.getText()));
+        loginButton.addActionListener(e -> {
+            try {
+                controller.login(usernameInput.getText());
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
+        });
         JPanel loginPanel = new JPanel(new GridBagLayout());
         loginPanel.add(usernameInput);
         loginPanel.add(loginButton);
@@ -59,7 +68,13 @@ public class View implements Observer {
         JButton sendButton = new JButton("Send");
         sendButton.setPreferredSize(new Dimension(100, 50));
         sendButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
-        sendButton.addActionListener(e -> controller.sendMessage(messageInput.getText()));
+        sendButton.addActionListener(e -> {
+            try {
+                controller.sendMessage(messageInput.getText());
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
+        });
 
         JPanel userPanel = new JPanel(new FlowLayout());
         userPanel.add(messageInput);

@@ -1,5 +1,6 @@
 package Server;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -59,6 +60,8 @@ public class ServerThread extends Thread {
             System.out.println(clientUsername + "client disconnected");
         } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
